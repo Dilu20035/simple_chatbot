@@ -115,7 +115,6 @@ with st.sidebar:
     exec(code)
 
 
-
 def get_initial_message():
     messages = [
         {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings."},
@@ -124,9 +123,9 @@ def get_initial_message():
     ]
     return messages
 
-def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
-    response = openai.Completion.create(
-        engine=model,
+def get_chatgpt_response(messages, model="davinci"):
+    response = openai.ChatCompletion.create(
+        model=model,
         messages=messages
     )
     return response['choices'][0]['message']['content']
@@ -144,14 +143,10 @@ def update_and_display_response(query, model):
     st.session_state['generated'] = st.session_state.get('generated', []) + [response]
     st.session_state['messages'] = messages
 
-# Load environment variables
-load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
 st.title("Medical Chatbot")
 st.subheader("Ask Medical-Related Questions:")
 
-model = st.selectbox("ChatGPT Model", ("gpt-3.5-turbo",))
+model = st.selectbox("ChatGPT Model", ("davinci",))
 
 if 'messages' not in st.session_state:
     st.session_state['messages'] = get_initial_message()
