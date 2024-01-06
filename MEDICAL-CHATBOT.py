@@ -114,7 +114,6 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 with st.sidebar:
     exec(code)
 
-
 def get_initial_message():
     messages = [
         {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings."},
