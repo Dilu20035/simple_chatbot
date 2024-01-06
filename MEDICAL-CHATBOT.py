@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_chat import message
 from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
 import requests
@@ -116,75 +115,57 @@ with st.sidebar:
     exec(code)
 
 
+
 def get_initial_message():
-    messages=[
-            {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who anwers brief questions about Diseases, Symptomps and medical findings."},
-            {"role": "user", "content": "I want to know about my disease"},
-            {"role": "assistant", "content": "Thats awesome, what do you want to know about medical conditions"}
-        ]
+    messages = [
+        {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings."},
+        {"role": "user", "content": "I want to know about my disease"},
+        {"role": "assistant", "content": "That's awesome, what do you want to know about medical conditions?"}
+    ]
     return messages
 
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
-    print("model: ", model)
     response = openai.ChatCompletion.create(
-    model=model,
-    messages=messages
+        model=model,
+        messages=messages
     )
-    return  response['choices'][0]['message']['content']
+    return response['choices'][0]['message']['content']
 
 def update_chat(messages, role, content):
     messages.append({"role": role, "content": content})
     return messages
-# Function to update and display response
+
 def update_and_display_response(query, model):
-    messages = st.session_state['messages']
+    messages = st.session_state.get('messages', [])
     messages = update_chat(messages, "user", query)
     response = get_chatgpt_response(messages, model)
     messages = update_chat(messages, "assistant", response)
-    st.session_state.past.append(query)
-    st.session_state.generated.append(response)
-
-# Function to display chat history
-def display_chat_history():
-    for i in range(len(st.session_state['generated']) - 1, -1, -1):
-        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
-        message(st.session_state["generated"][i], key=str(i))
+    st.session_state['past'] = st.session_state.get('past', []) + [query]
+    st.session_state['generated'] = st.session_state.get('generated', []) + [response]
+    st.session_state['messages'] = messages
 
 # Load environment variables
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-if (selected == 'MEDICAL-CHATBOT'):
-    st.title("")
-
-st.markdown("<h1 style='text-align: center;'>Medical Chatbot</h1>", unsafe_allow_html=True)
-st.markdown("")
-
+st.title("Medical Chatbot")
 st.subheader("Ask Medical-Related Questions:")
 
-# ChatGPT Model selection
 model = st.selectbox("ChatGPT Model", ("gpt-3.5-turbo",))
 
-# Initialize session state if not present
-if 'generated' not in st.session_state:
-    st.session_state['generated'] = []
-if 'past' not in st.session_state:
-    st.session_state['past'] = []
 if 'messages' not in st.session_state:
     st.session_state['messages'] = get_initial_message()
 
-# Default medical prompt
 query = st.text_input("Ask a medical question: ", key="input", value="What are the symptoms of a common cold?")
 
-# Check if there's a default query and generate response on app start
-if query and 'generated' not in st.session_state:
-    update_and_display_response(query, model)
+if st.button("Ask"):
+    if query:
+        with st.spinner("Generating response..."):
+            update_and_display_response(query, model)
 
-# Handle user input and generate response
-if query:
-    with st.spinner("Generating response..."):
-        update_and_display_response(query, model)
+past_messages = st.session_state.get('past', [])
+generated_responses = st.session_state.get('generated', [])
 
-# Display chat history
-if st.session_state['generated']:
-    display_chat_history()
+for i in range(len(past_messages) - 1, -1, -1):
+    st.text(f"User: {past_messages[i]}")
+    st.text(f"Assistant: {generated_responses[i]}")
