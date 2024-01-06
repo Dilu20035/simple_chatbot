@@ -1,5 +1,6 @@
 streamlit==1.5.0
-streamlit-option-menu==0.0.6
+streamlit-option-menu==0.3.6
+streamlit-chat==0.1.1
 streamlit-lottie==0.0.5
 requests==2.26.0
 openai==0.11.2
