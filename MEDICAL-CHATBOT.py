@@ -158,7 +158,7 @@ if (selected == 'MEDICAL-CHATBOT'):
     st.title("")
 
 st.markdown("<h1 style='text-align: center;'>Medical Chatbot</h1>", unsafe_allow_html=True)
-st.divider()
+st.markdown("")
 
 st.subheader("Ask Medical-Related Questions:")
 
