@@ -125,8 +125,8 @@ def get_initial_message():
     return messages
 
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
-    response = openai.ChatCompletion.create(
-        model=model,
+    response = openai.Completion.create(
+        engine=model,
         messages=messages
     )
     return response['choices'][0]['message']['content']
