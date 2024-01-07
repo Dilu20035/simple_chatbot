@@ -120,24 +120,6 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 with st.sidebar:
     exec(code)
 
-
-input_id = "user_input"
-
-# JavaScript to clear the input field when clicked outside
-javascript = f"""
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {{
-            const inputField = document.getElementById("{input_id}");
-            inputField.addEventListener("blur", function() {{
-                inputField.value = '';
-            }});
-        }});
-    </script>
-"""
-
-# Render the JavaScript code
-st.markdown(javascript, unsafe_allow_html=True)
-
 st.title('')
 # Streamlit App Title
 st.markdown("<h1 style='text-align: center;'>Medical Diagnostic AI-Chatbot</h1>", unsafe_allow_html=True)
@@ -168,7 +150,7 @@ def get_openai_response(user_input):
 model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 
 # Create a text input box for user input
-user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
+user_input = st.text_input("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
