@@ -132,12 +132,17 @@ def get_openai_response(user_input):
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt=user_input,
-        max_tokens=50  # Adjust the number of tokens based on your requirements
+        max_tokens=150,  # Adjust the number of tokens based on your requirements
+        temperature=0.6,  # Adjust the randomness of responses
+        stop=["You:", "Bot:"]  # Stop generation at these markers
     )
     return response.choices[0].text.strip()
 
+# Default prompt for the medical specialist
+default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. Can you provide information?"
+
 # Create a text input box for user input
-user_input = st.text_input("You:", key="user_input")
+user_input = st.text_area("You:", key="user_input")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
@@ -145,7 +150,7 @@ if st.button("Ask"):
         st.session_state.conversation.append({"role": "user", "content": user_input})
         
         # Generate OpenAI response
-        bot_response = get_openai_response(user_input)
+        bot_response = get_openai_response(default_prompt + "\n" + user_input)
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
         
         # Display the most recent bot response in an output box
@@ -156,7 +161,7 @@ if st.button("Ask"):
         
         # Display conversation history in reverse order
         for i in range(len(st.session_state.conversation) - 3, -1, -2):
-            st.text_input("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
+            st.text_area("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
             st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
     else:
         st.warning("Please enter a question.")
