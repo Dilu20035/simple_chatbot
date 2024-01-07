@@ -123,6 +123,8 @@ with st.sidebar:
 st.title('')
 # Streamlit App Title
 st.markdown("<h1 style='text-align: center;'>Medical Diagnostic Chatbot</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Ask Medical Related Queries With Our Chatbot And Find The Results</p>", unsafe_allow_html=True)
+st.markdown("")
 
 # Initialize conversation history
 if 'conversation' not in st.session_state:
