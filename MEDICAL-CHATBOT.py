@@ -120,6 +120,24 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 with st.sidebar:
     exec(code)
 
+
+input_id = "user_input"
+
+# JavaScript to clear the input field when clicked outside
+javascript = f"""
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {{
+            const inputField = document.getElementById("{input_id}");
+            inputField.addEventListener("blur", function() {{
+                inputField.value = '';
+            }});
+        }});
+    </script>
+"""
+
+# Render the JavaScript code
+st.markdown(javascript, unsafe_allow_html=True)
+
 st.title('')
 # Streamlit App Title
 st.markdown("<h1 style='text-align: center;'>Medical Diagnostic AI-Chatbot</h1>", unsafe_allow_html=True)
@@ -129,6 +147,7 @@ st.markdown("")
 # Initialize conversation history
 if 'conversation' not in st.session_state:
     st.session_state.conversation = []
+
 
 # Default prompt for the medical specialist
 default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. And You don't answer anything related to non-medical user-inputs. Can you provide information?"
@@ -149,7 +168,7 @@ def get_openai_response(user_input):
 model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 
 # Create a text input box for user input
-user_input = st.text_input("Ask Medical-Related Questions:", key="user_input", value="", placeholder="Ask Something...")
+user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
@@ -170,8 +189,5 @@ if st.button("Ask"):
         for i in range(len(st.session_state.conversation) - 3, -1, -2):
             st.text_area("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
             st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
-        
-        # Reset the input field after processing
-        st.experimental_rerun()  # Rerun the app to reset the input field
     else:
         st.warning("Please enter a question.")
