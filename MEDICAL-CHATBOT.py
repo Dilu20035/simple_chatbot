@@ -119,35 +119,25 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 # Execute the code and display its output in the sidebar
 with st.sidebar:
     exec(code)
+# Streamlit App Title
+st.title("Medical Chatbot")
 
-# Define the conversation function
-def conversation(prompt, api_key):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are chatting with a medical assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        stop=None
+# Create a text input box for user input
+user_input = st.text_input("You:", "")
+
+# Function to call OpenAI's completion endpoint
+def get_openai_response(user_input):
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=user_input,
+        max_tokens=50  # Adjust the number of tokens based on your requirements
     )
-    return response.choices[0].message['content']
+    return response.choices[0].text.strip()
 
-# Streamlit UI
-def main():
-    st.title("Medical Chatbot")
-
-    user_input = st.text_input("You:", "")
-
-    if st.button("Ask"):
-        if user_input:
-            with st.spinner('Thinking...'):
-                bot_response = conversation(user_input, api_key)
-                st.text_area("Bot:", value=bot_response, height=200, max_chars=None, key=None)
-        else:
-            st.warning("Please enter a question.")
-
-if __name__ == "__main__":
-    main()
-past_messages = st.session_state.get('past', [])
-generated_responses = st.session_state.get('generated', [])
-
+# Display bot's response
+if st.button("Ask"):
+    if user_input:
+        bot_response = get_openai_response(user_input)
+        st.text_area("Bot:", bot_response)
+    else:
+        st.warning("Please enter a question.")
