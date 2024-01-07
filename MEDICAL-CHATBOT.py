@@ -152,6 +152,11 @@ model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 # Create a text input box for user input
 user_input = st.text_input("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
 
+# Clear text areas when app reruns
+if st.session_state.conversation:
+    st.session_state.conversation = []
+
+
 # Ask button to trigger the conversation
 if st.button("Ask"):
     if user_input:
