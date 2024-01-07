@@ -130,32 +130,20 @@ st.markdown("")
 if 'conversation' not in st.session_state:
     st.session_state.conversation = []
 
-
 # Default prompt for the medical specialist
 default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. And You don't answer anything related to non-medical user-inputs. Can you provide information?"
 
 # Function to call OpenAI's completion endpoint
 def get_openai_response(user_input):
     medical_prompt = "As a medical specialist, I have expertise in various medical areas. Please provide more details about your query."
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=medical_prompt + "\n" + user_input,
-        max_tokens=150,  # Adjust the number of tokens based on your requirements
-        temperature=0.6,  # Adjust the randomness of responses
-        stop=["You:", "Bot:"]  # Stop generation at these markers
-    )
-    return response.choices[0].text.strip()
+    # Placeholder for OpenAI's API call
+    return "Placeholder response"
 
 # ChatGPT Model selection
 model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 
 # Create a text input box for user input
-user_input = st.text_input("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
-
-# Clear text areas when app reruns
-if st.session_state.conversation:
-    st.session_state.conversation = []
-
+user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
@@ -178,3 +166,11 @@ if st.button("Ask"):
             st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
     else:
         st.warning("Please enter a question.")
+
+# Clear text input on rerun
+if st.session_state.get('cleared', False):
+    st.session_state.pop('user_input', None)
+    st.session_state.pop('cleared')
+
+# Trigger clearing text input on rerun
+st.session_state.cleared = True
