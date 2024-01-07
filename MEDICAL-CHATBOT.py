@@ -132,9 +132,6 @@ def get_chatgpt_response(messages, model="davinci"):
     )
     return response['choices'][0]['message']['content']
 
-def update_chat(messages, role, content):
-    messages.append({"role": role, "content": content})
-    return messages
 
 def update_and_display_response(query, model):
     messages = st.session_state.get('messages', [])
@@ -163,6 +160,3 @@ if st.button("Ask"):
 past_messages = st.session_state.get('past', [])
 generated_responses = st.session_state.get('generated', [])
 
-for i in range(len(past_messages) - 1, -1, -1):
-    st.text(f"User: {past_messages[i]}")
-    st.text(f"Assistant: {generated_responses[i]}")
