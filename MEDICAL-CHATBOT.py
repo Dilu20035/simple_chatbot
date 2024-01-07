@@ -83,6 +83,9 @@ def load_lottieurl(url: str):
 
 lottie_coding = load_lottieurl("https://lottie.host/e8cca356-1ed3-4d6d-a263-377ffdbfae98/L1n9J2mGso.json")  # replace link to local lottie file
 
+load_dotenv()
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
 
 with st.sidebar:   
     selected = option_menu('',['MEDICAL-CHATBOT'],
