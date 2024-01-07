@@ -150,7 +150,7 @@ def get_openai_response(user_input):
 model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 
 # Create a text input box for user input
-user_input = st.text_input("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
+user_input = st.text_input("Ask Medical-Related Questions:", key="user_input", value="", placeholder="Ask Something...")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
@@ -172,6 +172,7 @@ if st.button("Ask"):
             st.text_area("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
             st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
         
-        st.session_state.user_input = ""  # Clear the user input after processing
+        # Reset the input field after processing
+        st.experimental_rerun()  # Rerun the app to reset the input field
     else:
         st.warning("Please enter a question.")
