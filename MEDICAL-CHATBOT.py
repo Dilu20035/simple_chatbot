@@ -3,7 +3,6 @@ from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
 import requests
 import os
-from dotenv import load_dotenv
 import openai
 
 st.set_page_config(page_title="HDA-Medical-Chatbot", page_icon=None, layout="centered", initial_sidebar_state="expanded", menu_items=None)
@@ -83,8 +82,12 @@ def load_lottieurl(url: str):
 
 lottie_coding = load_lottieurl("https://lottie.host/e8cca356-1ed3-4d6d-a263-377ffdbfae98/L1n9J2mGso.json")  # replace link to local lottie file
 
-load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+api_key = os.getenv('OPENAI_API_KEY')
+if api_key is None:
+    st.error("OpenAI API key not found. Set the environment variable 'OPENAI_API_KEY'.")
+    st.stop()
+else:
+    openai.api_key = api_key
 
 
 with st.sidebar:   
@@ -117,46 +120,34 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 with st.sidebar:
     exec(code)
 
-def get_initial_message():
-    messages = [
-        {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings."},
-        {"role": "user", "content": "I want to know about my disease"},
-        {"role": "assistant", "content": "That's awesome, what do you want to know about medical conditions?"}
-    ]
-    return messages
-
-def get_chatgpt_response(messages, model="davinci"):
+# Define the conversation function
+def conversation(prompt, api_key):
     response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are chatting with a medical assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        stop=None
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message['content']
 
+# Streamlit UI
+def main():
+    st.title("Medical Chatbot")
 
-def update_and_display_response(query, model):
-    messages = st.session_state.get('messages', [])
-    messages = update_chat(messages, "user", query)
-    response = get_chatgpt_response(messages, model)
-    messages = update_chat(messages, "assistant", response)
-    st.session_state['past'] = st.session_state.get('past', []) + [query]
-    st.session_state['generated'] = st.session_state.get('generated', []) + [response]
-    st.session_state['messages'] = messages
+    user_input = st.text_input("You:", "")
 
-st.title("Medical Chatbot")
-st.subheader("Ask Medical-Related Questions:")
+    if st.button("Ask"):
+        if user_input:
+            with st.spinner('Thinking...'):
+                bot_response = conversation(user_input, api_key)
+                st.text_area("Bot:", value=bot_response, height=200, max_chars=None, key=None)
+        else:
+            st.warning("Please enter a question.")
 
-model = st.selectbox("ChatGPT Model", ("davinci",))
-
-if 'messages' not in st.session_state:
-    st.session_state['messages'] = get_initial_message()
-
-query = st.text_input("Ask a medical question: ", key="input", value="What are the symptoms of a common cold?")
-
-if st.button("Ask"):
-    if query:
-        with st.spinner("Generating response..."):
-            update_and_display_response(query, model)
-
+if __name__ == "__main__":
+    main()
 past_messages = st.session_state.get('past', [])
 generated_responses = st.session_state.get('generated', [])
 
