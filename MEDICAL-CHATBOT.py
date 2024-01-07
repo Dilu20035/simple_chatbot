@@ -138,11 +138,14 @@ def get_openai_response(user_input):
     )
     return response.choices[0].text.strip()
 
+# ChatGPT Model selection
+model = st.selectbox("ChatGPT Model", ("gpt-3.5-turbo",))
+
 # Default prompt for the medical specialist
 default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. And You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. Can you provide information?"
 
 # Create a text input box for user input
-user_input = st.text_area("You:", key="user_input")
+user_input = st.text_area("Ask Medical-Related Questions:", key="user_input")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
