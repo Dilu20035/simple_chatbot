@@ -120,8 +120,9 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 with st.sidebar:
     exec(code)
 
+st.title('')
 # Streamlit App Title
-st.title("Medical Chatbot")
+st.markdown("<h1 style='text-align: center;'>Medical Chatbot</h1>", unsafe_allow_html=True)
 
 # Initialize conversation history
 if 'conversation' not in st.session_state:
@@ -139,7 +140,7 @@ def get_openai_response(user_input):
     return response.choices[0].text.strip()
 
 # ChatGPT Model selection
-model = st.selectbox("ChatGPT Model", ("gpt-3.5-turbo",))
+model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 
 # Default prompt for the medical specialist
 default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. And You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. Can you provide information?"
