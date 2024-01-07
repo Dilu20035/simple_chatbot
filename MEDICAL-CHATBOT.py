@@ -136,16 +136,8 @@ def get_openai_response(user_input):
     )
     return response.choices[0].text.strip()
 
-# Display conversation history
-for i, message in enumerate(st.session_state.conversation):
-    if message["role"] == "user":
-        st.text_input("You:", value=message["content"], key=f"user_input_{i}", disabled=True)
-    elif message["role"] == "bot":
-        st.text_area("Bot:", value=message["content"], key=f"bot_response_{i}", disabled=True)
-
 # Create a text input box for user input
 user_input = st.text_input("You:", key="user_input")
-
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
@@ -156,8 +148,21 @@ if st.button("Ask"):
         bot_response = get_openai_response(user_input)
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
         
-        # Display bot's response
-        st.text_area("Bot:", value=bot_response, key=f"bot_response_{len(st.session_state.conversation)}", disabled=True)
+        # Display conversation history
+        for i, message in enumerate(st.session_state.conversation):
+            if message["role"] == "user":
+                col1, col2 = st.beta_columns([1, 4])
+                with col1:
+                    st.text_input("You:", value=message["content"], key=f"user_input_{i}", disabled=True)
+                with col2:
+                    st.text_area("Bot:", value=st.session_state.conversation[i+1]["content"], key=f"bot_response_{i}", disabled=True)
+                break
     else:
         st.warning("Please enter a question.")
 
+# Display remaining conversation history
+if len(st.session_state.conversation) > 2:  # Show conversation history if more than one Q&A
+    st.subheader("Conversation History:")
+    for i in range(2, len(st.session_state.conversation), 2):
+        st.text_input("You:", value=st.session_state.conversation[i]["content"], key=f"user_input_{i//2}", disabled=True)
+        st.text_area("Bot:", value=st.session_state.conversation[i+1]["content"], key=f"bot_response_{i//2}", disabled=True)
