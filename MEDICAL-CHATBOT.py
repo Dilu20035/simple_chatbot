@@ -178,4 +178,4 @@ if col1.button("Ask"):
 
 with col2:
     if st.button("Clear"):
-        user_input.text_area = ""
+        user_input.text_input = ""
