@@ -178,5 +178,4 @@ if col1.button("Ask"):
 
 with col2:
     if st.button("Clear"):
-        st.session_state.user_input = ""  # Reset the user input in session state
-        st.text_area("Ask Medical-Related Questions:", key=f"user_input_{hash('clear_button')}", value="", placeholder="Ask Something...")
+        st.text_area("Ask Medical-Related Questions:", value="", key="clear_user_input", placeholder="Ask Something...")
