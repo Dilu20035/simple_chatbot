@@ -132,7 +132,7 @@ if 'conversation' not in st.session_state:
 def get_openai_response(user_input):
     response = openai.Completion.create(
         engine="text-davinci-003",
-        prompt=user_input,
+        prompt=medical_prompt + "\n" + user_input,
         max_tokens=150,  # Adjust the number of tokens based on your requirements
         temperature=0.6,  # Adjust the randomness of responses
         stop=["You:", "Bot:"]  # Stop generation at these markers
