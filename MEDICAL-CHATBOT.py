@@ -179,5 +179,4 @@ if col1.button("Ask"):
 with col2:
     if st.button("Clear"):
         st.session_state.user_input = ""  # Reset the user input in session state
-        new_placeholder = st.empty()  # Create a new empty text_area to clear the input
-        new_placeholder.text_area("Ask Medical-Related Questions:", key="user_input", value="", placeholder="Ask Something...")
+        st.text_area("Ask Medical-Related Questions:", key=f"user_input_{hash('clear_button')}", value="", placeholder="Ask Something...")
