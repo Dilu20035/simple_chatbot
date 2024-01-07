@@ -154,7 +154,8 @@ model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
 
 # Ask button to trigger the conversation
-if st.button("Ask"):
+col1, col2 = st.columns([4, 1])
+if col1.button("Ask"):
     if user_input:
         st.session_state.conversation.append({"role": "user", "content": user_input})
         
@@ -174,3 +175,7 @@ if st.button("Ask"):
             st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
     else:
         st.warning("Please enter a question.")
+
+with col2:
+    if st.button("Clear"):
+        st.session_state.user_input = ""
