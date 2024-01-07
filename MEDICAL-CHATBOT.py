@@ -139,7 +139,7 @@ def get_openai_response(user_input):
     return response.choices[0].text.strip()
 
 # Default prompt for the medical specialist
-default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. Can you provide information?"
+default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. And You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. Can you provide information?"
 
 # Create a text input box for user input
 user_input = st.text_area("You:", key="user_input")
