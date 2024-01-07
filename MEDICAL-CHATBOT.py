@@ -119,25 +119,55 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 # Execute the code and display its output in the sidebar
 with st.sidebar:
     exec(code)
-# Streamlit App Title
-st.title("Medical Chatbot")
 
-# Create a text input box for user input
-user_input = st.text_input("You:", "")
 
-# Function to call OpenAI's completion endpoint
-def get_openai_response(user_input):
+def get_initial_message():
+    messages = [
+        {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings."},
+        {"role": "user", "content": "I want to know about my disease"},
+        {"role": "assistant", "content": "That's awesome, what do you want to know about medical conditions?"}
+    ]
+    return messages
+
+def get_chatgpt_response(messages, model):
     response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=user_input,
+        model="text-davinci-003",
+        messages=messages,
         max_tokens=50  # Adjust the number of tokens based on your requirements
     )
-    return response.choices[0].text.strip()
+    return response['choices'][0]['message']['content']
 
-# Display bot's response
+def update_chat(messages, role, content):
+    messages.append({"role": role, "content": content})
+    return messages
+
+def update_and_display_response(query, model):
+    messages = st.session_state.get('messages', [])
+    messages = update_chat(messages, "user", query)
+    response = get_chatgpt_response(messages, model)
+    messages = update_chat(messages, "assistant", response)
+    st.session_state['past'] = st.session_state.get('past', []) + [query]
+    st.session_state['generated'] = st.session_state.get('generated', []) + [response]
+    st.session_state['messages'] = messages
+
+st.title("Medical Chatbot")
+st.subheader("Ask Medical-Related Questions:")
+
+model = st.selectbox("ChatGPT Model", ("davinci",))
+
+if 'messages' not in st.session_state:
+    st.session_state['messages'] = get_initial_message()
+
+query = st.text_input("Ask a medical question: ", key="input", value="What are the symptoms of a common cold?")
+
 if st.button("Ask"):
-    if user_input:
-        bot_response = get_openai_response(user_input)
-        st.text_area("Bot:", bot_response)
-    else:
-        st.warning("Please enter a question.")
+    if query:
+        with st.spinner("Generating response..."):
+            update_and_display_response(query, model)
+
+past_messages = st.session_state.get('past', [])
+generated_responses = st.session_state.get('generated', [])
+
+for i in range(len(past_messages) - 1, -1, -1):
+    st.text(f"User: {past_messages[i]}")
+    st.text(f"Assistant: {generated_responses[i]}")
