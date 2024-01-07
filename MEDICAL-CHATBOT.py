@@ -150,7 +150,7 @@ def get_openai_response(user_input):
 model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 
 # Create a text input box for user input
-user_input = st.text_area("Ask Medical-Related Questions:", key="user_input")
+user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Say Something...")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
