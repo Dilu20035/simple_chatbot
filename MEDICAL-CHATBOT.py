@@ -163,7 +163,7 @@ if st.button("Ask"):
         if st.session_state.conversation and st.session_state.conversation[-1]["role"] == "bot":
             latest_bot_response = st.session_state.conversation[-1]["content"]
             bot_output = st.empty()
-            bot_output.write(f"Chatbot Says:- \n {latest_bot_response}")
+            bot_output.write(f"Chatbot Says:- {latest_bot_response}")
         
         # Display conversation history in reverse order
         for i in range(len(st.session_state.conversation) - 3, -1, -2):
