@@ -123,34 +123,22 @@ with st.sidebar:
 # Streamlit App Title
 st.title("Medical Chatbot")
 
-# Function to generate ChatGPT response (replace this with your OpenAI API call)
-def generate_response(user_input):
-    # Sample response, replace this with actual OpenAI API interaction
-    return f"ChatGPT Response: You entered '{user_input}'"
-
-# Role-based conversation simulation
-conversation = [
-    {"role": "system", "content": "You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings."},
-    {"role": "user", "content": "I want to know about my disease"},
-    {"role": "assistant", "content": "That's awesome, what do you want to know about medical conditions?"}
-]
-
-# Create text areas for conversation and user input
-conversation_area = st.empty()
+# Create a text input box for user input
 user_input = st.text_input("You:", "")
 
-# Ask button to trigger the conversation
+# Function to call OpenAI's completion endpoint
+def get_openai_response(user_input):
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=user_input,
+        max_tokens=50  # Adjust the number of tokens based on your requirements
+    )
+    return response.choices[0].text.strip()
+
+# Display bot's response
 if st.button("Ask"):
     if user_input:
-        # Add user input to conversation
-        conversation.append({"role": "user", "content": user_input})
-        
-        # Generate ChatGPT response
-        bot_response = generate_response(user_input)
-        conversation.append({"role": "assistant", "content": bot_response})
-
-        # Update conversation area
-        conversation_text = "\n\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation])
-        conversation_area.text(conversation_text)
+        bot_response = get_openai_response(user_input)
+        st.text_area("Bot:", bot_response)
     else:
         st.warning("Please enter a question.")
