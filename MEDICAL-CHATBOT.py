@@ -154,7 +154,7 @@ model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
 user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
 
 # Ask button to trigger the conversation
-col1, col2 = st.columns([4, 1])
+col1, col2 = st.columns([5, 1])
 if col1.button("Ask"):
     if user_input:
         st.session_state.conversation.append({"role": "user", "content": user_input})
@@ -178,4 +178,4 @@ if col1.button("Ask"):
 
 with col2:
     if st.button("Clear"):
-        st.session_state.user_input = ""
+        user_input = st.empty()
