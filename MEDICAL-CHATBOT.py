@@ -147,7 +147,7 @@ if st.button("Ask"):
         bot_response = get_openai_response(user_input)
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
 
-        st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
+        st.text_area("Bot:", key=f"bot_response")
         # Display conversation history in reverse order
         for i in range(len(st.session_state.conversation) - 1, -1, -2):
             st.text_input("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
