@@ -149,7 +149,9 @@ if st.button("Ask"):
 
         if st.session_state.conversation and st.session_state.conversation[-1]["role"] == "bot":
             latest_bot_response = st.session_state.conversation[-1]["content"]
-            st.text_area("Bot's Response:", value=latest_bot_response, disabled=True)
+            st.text_area("Bot's Response:", value=latest_bot_response)
+
+        st.markdown("")
 
         # Display conversation history in reverse order
         for i in range(len(st.session_state.conversation) - 1, -1, -2):
