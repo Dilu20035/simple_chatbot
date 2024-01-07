@@ -123,6 +123,12 @@ with st.sidebar:
 # Streamlit App Title
 st.title("Medical Chatbot")
 
+# Role-based conversation simulation
+conversation = []
+
+# Create a placeholder to display the conversation
+conversation_area = st.empty()
+
 # Create a text input box for user input
 user_input = st.text_input("You:", "")
 
@@ -135,10 +141,18 @@ def get_openai_response(user_input):
     )
     return response.choices[0].text.strip()
 
-# Display bot's response
+# Display bot's response and update conversation
 if st.button("Ask"):
     if user_input:
+        # Add user input to conversation
+        conversation.append({"role": "user", "content": user_input})
+
+        # Generate ChatGPT response
         bot_response = get_openai_response(user_input)
-        st.text_area("Bot:", bot_response)
+        conversation.append({"role": "assistant", "content": bot_response})
+
+        # Display updated conversation vertically
+        conversation_text = "\n\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation])
+        conversation_area.text(conversation_text)
     else:
         st.warning("Please enter a question.")
