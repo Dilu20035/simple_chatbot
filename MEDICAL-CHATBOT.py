@@ -179,7 +179,7 @@ if col1.button("Ask"):
 with col2:
     if st.button("Clear"):
         st.session_state.user_input = ""  # Reset the user input in session state
-    st.write(
-        "<script>document.getElementById('user_input').value='';</script>",
-        unsafe_allow_html=True
-    )
+        st.write(
+            "<script>document.getElementById('user_input').value='';</script>",
+            unsafe_allow_html=True
+        )
