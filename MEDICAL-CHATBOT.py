@@ -137,7 +137,7 @@ def get_openai_response(user_input):
     return response.choices[0].text.strip()
 
 # Create a text input box for user input
-user_input = st.text_input("You:", "")
+user_input = st.text_input("You:", key="user_input")
 
 # Ask button to trigger the conversation
 if st.button("Ask"):
@@ -149,13 +149,13 @@ if st.button("Ask"):
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
         
         # Display bot's response
-        st.text_area("Bot:", value=bot_response, key=bot_response, disabled=True)
+        st.text_area("Bot:", value=bot_response, key=f"bot_response_{len(st.session_state.conversation)}", disabled=True)
     else:
         st.warning("Please enter a question.")
 
 # Display conversation history
-for message in st.session_state.conversation:
+for i, message in enumerate(st.session_state.conversation):
     if message["role"] == "user":
-        st.text_input("You:", value=message["content"], key=message["content"], disabled=True)
+        st.text_input("You:", value=message["content"], key=f"user_input_{i}", disabled=True)
     elif message["role"] == "bot":
-        st.text_area("Bot:", value=message["content"], key=message["content"], disabled=True)
+        st.text_area("Bot:", value=message["content"], key=f"bot_response_{i}", disabled=True)
