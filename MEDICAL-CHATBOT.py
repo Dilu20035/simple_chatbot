@@ -155,7 +155,7 @@ if st.button("Ask"):
             bot_output.write(f"Bot's Response: {latest_bot_response}")
         
         # Display conversation history in reverse order
-        for i in range(len(st.session_state.conversation) - 1, -1, -2):
+        for i in range(len(st.session_state.conversation) - 3, -1, -2):
             st.text_input("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
             st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
     else:
