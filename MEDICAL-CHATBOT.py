@@ -135,7 +135,7 @@ def get_openai_response(user_input):
         max_tokens=50  # Adjust the number of tokens based on your requirements
     )
     return response.choices[0].text.strip()
-    
+
 # Create a text input box for user input
 user_input = st.text_input("You:", "")
 
@@ -159,4 +159,3 @@ for message in st.session_state.conversation:
         st.text_input("You:", value=message["content"], key=message["content"], disabled=True)
     elif message["role"] == "bot":
         st.text_area("Bot:", value=message["content"], key=message["content"], disabled=True)
-
