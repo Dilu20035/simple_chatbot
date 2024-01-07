@@ -119,7 +119,6 @@ st.sidebar.markdown("```python\n{}\n```".format(code))
 # Execute the code and display its output in the sidebar
 with st.sidebar:
     exec(code)
-
 # Streamlit App Title
 st.title("Medical Chatbot")
 
@@ -148,21 +147,9 @@ if st.button("Ask"):
         bot_response = get_openai_response(user_input)
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
         
-        # Display conversation history
-        for i, message in enumerate(st.session_state.conversation):
-            if message["role"] == "user":
-                col1, col2 = st.beta_columns([1, 4])
-                with col1:
-                    st.text_input("You:", value=message["content"], key=f"user_input_{i}", disabled=True)
-                with col2:
-                    st.text_area("Bot:", value=st.session_state.conversation[i+1]["content"], key=f"bot_response_{i}", disabled=True)
-                break
+        # Display conversation history in reverse order
+        for i in range(len(st.session_state.conversation) - 1, -1, -2):
+            st.text_area("Bot:", value=st.session_state.conversation[i]["content"], key=f"bot_response_{i}", disabled=True)
+            st.text_input("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
     else:
         st.warning("Please enter a question.")
-
-# Display remaining conversation history
-if len(st.session_state.conversation) > 2:  # Show conversation history if more than one Q&A
-    st.subheader("Conversation History:")
-    for i in range(2, len(st.session_state.conversation), 2):
-        st.text_input("You:", value=st.session_state.conversation[i]["content"], key=f"user_input_{i//2}", disabled=True)
-        st.text_area("Bot:", value=st.session_state.conversation[i+1]["content"], key=f"bot_response_{i//2}", disabled=True)
