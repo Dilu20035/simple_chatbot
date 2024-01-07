@@ -146,13 +146,13 @@ if st.button("Ask"):
         # Generate OpenAI response
         bot_response = get_openai_response(user_input)
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
-
+        
+        # Display the most recent bot response in an output box
         if st.session_state.conversation and st.session_state.conversation[-1]["role"] == "bot":
             latest_bot_response = st.session_state.conversation[-1]["content"]
-            st.text_area("Bot's Response:", value=latest_bot_response)
-
-        st.markdown("")
-
+            bot_output = st.empty()
+            bot_output.write(f"Bot's Response: {latest_bot_response}")
+        
         # Display conversation history in reverse order
         for i in range(len(st.session_state.conversation) - 1, -1, -2):
             st.text_input("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
