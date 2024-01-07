@@ -128,8 +128,13 @@ st.markdown("<h1 style='text-align: center;'>Medical Diagnostic Chatbot</h1>", u
 if 'conversation' not in st.session_state:
     st.session_state.conversation = []
 
+
+# Default prompt for the medical specialist
+default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. And You don't answer anything related to non-medical user-inputs. Can you provide information?"
+
 # Function to call OpenAI's completion endpoint
 def get_openai_response(user_input):
+    medical_prompt = "As a medical specialist, I have expertise in various medical areas. Please provide more details about your query."
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt=medical_prompt + "\n" + user_input,
@@ -141,9 +146,6 @@ def get_openai_response(user_input):
 
 # ChatGPT Model selection
 model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
-
-# Default prompt for the medical specialist
-default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. And You don't answer anything related to non-medical user-inputs. Can you provide information?"
 
 # Create a text input box for user input
 user_input = st.text_area("Ask Medical-Related Questions:", key="user_input")
