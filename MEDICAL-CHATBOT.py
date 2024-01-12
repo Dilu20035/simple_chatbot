@@ -131,20 +131,19 @@ st.markdown("")
 if 'conversation' not in st.session_state:
     st.session_state.conversation = []
 
-
 # Default prompt for the medical specialist
 default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. And You don't answer anything related to non-medical user-inputs. Can you provide information?"
 
 # Function to call OpenAI's completion endpoint
 def get_openai_response(user_input):
     medical_prompt = "As a medical specialist, I have expertise in various medical areas. Please provide more details about your query."
-    
+
     # Structure the conversation as a list of messages
     conversation = [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": user_input}
     ]
-    
+
     response = openai.Completion.create(
         engine="gpt-3.5-turbo-1106",
         prompt=medical_prompt,
@@ -153,11 +152,11 @@ def get_openai_response(user_input):
         temperature=0.6,  # Adjust the randomness of responses
         stop=["You:", "Bot:"]  # Stop generation at these markers
     )
-    
+
     return response['choices'][0]['message']['content'].strip()
 
-# ChatGPT Model selection
-model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
+# ChatGPT Model selection (you may want to use a different mechanism to choose the model)
+model = "gpt-3.5-turbo-1106"
 
 # Create a text input box for user input
 user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
@@ -166,17 +165,17 @@ user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", pl
 if st.button("Ask"):
     if user_input:
         st.session_state.conversation.append({"role": "user", "content": user_input})
-        
+
         # Generate OpenAI response
-        bot_response = get_openai_response(default_prompt + "\n" + user_input)
+        bot_response = get_openai_response(user_input)
         st.session_state.conversation.append({"role": "bot", "content": bot_response})
-        
+
         # Display the most recent bot response in an output box
         if st.session_state.conversation and st.session_state.conversation[-1]["role"] == "bot":
             latest_bot_response = st.session_state.conversation[-1]["content"]
             bot_output = st.empty()
             bot_output.write(f"CHATBOT Says :-  {latest_bot_response}")
-        
+
         # Display conversation history in reverse order
         for i in range(len(st.session_state.conversation) - 3, -1, -2):
             st.text_area("You:", value=st.session_state.conversation[i - 1]["content"], key=f"user_input_{i - 1}", disabled=True)
