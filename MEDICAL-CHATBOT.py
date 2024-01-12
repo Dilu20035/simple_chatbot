@@ -141,7 +141,7 @@ def get_openai_response(user_input):
     response = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",
         prompt=medical_prompt + "\n" + user_input,
-        max_tokens=150,  
+        max_tokens=300,  
         temperature=0.6, 
         stop=["You:", "Bot:"]
     )
