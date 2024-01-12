@@ -145,8 +145,9 @@ def get_openai_response(user_input):
         {"role": "user", "content": user_input}
     ]
     
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-1106",
+    response = openai.Completion.create(
+        engine="gpt-3.5-turbo-1106",
+        prompt=medical_prompt,
         messages=conversation,
         max_tokens=150,  # Adjust the number of tokens based on your requirements
         temperature=0.6,  # Adjust the randomness of responses
