@@ -135,21 +135,22 @@ if 'conversation' not in st.session_state:
 default_prompt = "You are a medical specialist. I need your expertise to understand various medical conditions, treatments, and procedures. You are a helpful Medical Diagnostic AI Doctor. Who answers brief questions about Diseases, Symptoms, and medical findings. And You don't answer anything related to non-medical user-inputs. Can you provide information?"
 
 # Function to call OpenAI's completion endpoint
-def get_openai_response(user_input):
-    medical_prompt = "As a medical specialist, I have expertise in various medical areas. Please provide more details about your query."
-    
-    # Concatenate the system, user, and assistant messages
+# Concatenate the system, user, and assistant messages
     prompt = f"{medical_prompt}\nUser: {user_input}\nAssistant:"
 
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-1106",
-        prompt=prompt,
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-1106",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": user_input},
+            {"role": "assistant", "content": ""}
+        ],
         max_tokens=150,  # Adjust the number of tokens based on your requirements
         temperature=0.6,  # Adjust the randomness of responses
         stop=["User:", "Assistant:"]  # Stop generation at these markers
     )
 
-    return response['choices'][0]['text'].strip()
+    return response['choices'][0]['message']['content'].strip()
 
 # ChatGPT Model selection (you may want to use a different mechanism to choose the model)
 model = "gpt-3.5-turbo-1106"
