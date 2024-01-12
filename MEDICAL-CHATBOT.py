@@ -137,18 +137,19 @@ default_prompt = "You are a medical specialist. I need your expertise to underst
 
 # Function to call OpenAI's completion endpoint
 def get_openai_response(user_input):
-    # Set a prompt indicating it's a medical chatbot
-    prompt = "You: I have a medical question.\nBot:"
+    medical_prompt = "As a medical specialist, I have expertise in various medical areas. Please provide more details about your query."
     response = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",
-        prompt=prompt + user_input,
-        max_tokens=50  # Adjust the number of tokens based on your requirements
+        prompt=medical_prompt + "\n" + user_input,
+        max_tokens=150,  
+        temperature=0.6, 
+        stop=["You:", "Bot:"]
     )
     return response.choices[0].text.strip()
 
 
 # ChatGPT Model selection
-model = st.selectbox("ChatGPT Model", ("text-davinci-003",))
+model = st.selectbox("ChatGPT Model", ("gpt-3.5-turbo-instruct",))
 
 # Create a text input box for user input
 user_input = st.text_area("Ask Medical-Related Questions:", key="user_input", placeholder="Ask Something...")
