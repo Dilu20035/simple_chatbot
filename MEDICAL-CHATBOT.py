@@ -18,7 +18,7 @@ st.markdown("""
             </li>
             <li>
                 <div>
-                    <a href="#" target="_self"><button style="background-color: #fff; color: #443e85; padding: 0.5rem 1rem; border: none; cursor: pointer; border-radius: 1rem; margin-top: 3px;">Close</button></a>
+                    <a href="https://hdaanalyzer.000webhostapp.com/medi-chatbot.php" target="_self"><button style="background-color: #fff; color: #443e85; padding: 0.5rem 1rem; border: none; cursor: pointer; border-radius: 1rem; margin-top: 3px;">Close</button></a>
                 </div>
             </li>
         </ul>
