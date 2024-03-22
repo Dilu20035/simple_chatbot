@@ -139,7 +139,7 @@ default_prompt = "You are a medical specialist. I need your expertise to underst
 def get_openai_response(user_input):
     medical_prompt = "As a medical specialist, I have expertise in various medical areas. Please provide more details about your query."
     response = openai.Completion.create(
-        engine="gpt-3.5-turbo",
+        engine="davinci",
         prompt=medical_prompt + "\n" + user_input,
         max_tokens=300,  
         temperature=0.6, 
